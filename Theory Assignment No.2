@@ -1,0 +1,67 @@
+import React, { useState } from 'react';
+import { View, TextInput, Button, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+
+const TodoApp = () => {
+  const [tasks, setTasks] = useState([]);
+  const [task, setTask] = useState('');
+
+  const handleDeleteTask = id => {
+    setTasks(tasks.filter(item => item.id !== id));
+  };
+
+  const handleAddTask = () => {
+    if (task.trim() === '') return;
+    setTasks([...tasks, { id: Date.now(), text: task }]);
+    setTask('');
+  };
+
+  const renderItem = ({ item }) => (
+    <TouchableOpacity onPress={() => handleDeleteTask(item.id)}>
+      <Text style={styles.task}>{item.text}</Text>
+    </TouchableOpacity>
+  );
+
+  return (
+    <View style={styles.container}>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter task"
+        value={task}
+        onChangeText={text => setTask(text)}
+      />
+      <Button title="Add Task" onPress={handleAddTask} />
+      <FlatList
+        data={tasks}
+        renderItem={renderItem}
+        keyExtractor={item => item.id.toString()}
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#fff',
+    alignItems: 'center', 
+    justifyContent: 'center',
+  },
+  input: {
+    height: 40,
+    width: '80%', 
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+  },
+  task: {
+    fontSize: 16,
+    marginBottom: 5,
+    backgroundColor: '#e6e6e6', 
+    padding: 10, 
+    borderRadius: 5,
+  },
+});
+
+
